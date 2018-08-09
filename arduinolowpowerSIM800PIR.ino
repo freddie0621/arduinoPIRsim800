@@ -88,7 +88,7 @@ void loop()
   delay(1000);
  
   //Send new SMS command and message number
-  serialSIM800.write("AT+CMGS=\"0695307298\"\r\n");
+  serialSIM800.write("AT+CMGS=\"069530*2*8\"\r\n");
   delay(1000);
    
   //Send SMS content

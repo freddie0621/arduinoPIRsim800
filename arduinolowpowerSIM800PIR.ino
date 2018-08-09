@@ -4,10 +4,14 @@
 //#include <TextFinder.h> 
 #define DEBUG true
 //#define DEBUG false
-SoftwareSerial GSM800(7,8); // RX,TX // make RX Arduino line is pin 2, make TX Arduino line is pin 3.
-    // This means that you need to connect the TX line from the esp to the Arduino's pin 2
-    // and the RX line from the esp to the Arduino's pin 3
-// Use pin 4 as wake up pin
+//SIM800 TX is connected to Arduino D8
+#define SIM800_TX_PIN 8
+ 
+//SIM800 RX is connected to Arduino D7
+#define SIM800_RX_PIN 7
+ 
+//Create software serial object to communicate with SIM800
+SoftwareSerial serialSIM800(SIM800_TX_PIN,SIM800_RX_PIN);
 const int wakeUpPin = 2;
 
 int led = 12;
@@ -72,19 +76,28 @@ void loop()
   digitalWrite(13, HIGH); 
   delay(1000);
   digitalWrite(13, LOW); 
-    //Serial.println("Sending text message...");
+    Serial.println("Sending text message...");
    delay(1000);
-   GSM800.begin(9600);
+  serialSIM800.begin(9600);
   delay(1000);
-    GSM800.print("AT+CMGF=1\r");  // Lance le mode SMS
-    delay(1000);
-    GSM800.print("AT+CMGS=\"+3369530****\"\r");
+
+  Serial.println("Sending SMS...");
+   
+  //Set SMS format to ASCII
+  serialSIM800.write("AT+CMGF=1\r\n");
   delay(1000);
-    GSM800.print("SIM  ALERT !\r");     // Le texte du message
-delay(1000);
-  GSM800.print(char(26));  // Equivalent du Ctrl+Z (fin de texte du SMS) 
-delay(1000);
-  GSM800.println();
-   Serial.println("OK...");
+ 
+  //Send new SMS command and message number
+  serialSIM800.write("AT+CMGS=\"0695307298\"\r\n");
   delay(1000);
+   
+  //Send SMS content
+  serialSIM800.write("SIM ALERTE !");
+  delay(1000);
+   
+  //Send Ctrl+Z / ESC to denote SMS message is complete
+  serialSIM800.write((char)26);
+  delay(1000);
+     
+  Serial.println("SMS Sent!");
     }

@@ -78,7 +78,7 @@ void loop()
   delay(1000);
     GSM800.print("AT+CMGF=1\r");  // Lance le mode SMS
     delay(1000);
-    GSM800.print("AT+CMGS=\"+33695307298\"\r");
+    GSM800.print("AT+CMGS=\"+3369530****\"\r");
   delay(1000);
     GSM800.print("SIM  ALERT !\r");     // Le texte du message
 delay(1000);
